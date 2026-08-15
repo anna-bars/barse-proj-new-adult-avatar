@@ -1,0 +1,251 @@
+:root{
+  --bg:#EFE9FA;
+  --lav-1:#D9CFF3;
+  --lav-2:#E2DAF7;
+  --glass:rgba(255,255,255,0.55);
+  --glass-line:rgba(43,33,64,0.12);
+  --text:#2B2140;
+  --text-dim:#8f84a8;
+
+  --ember:#FF421E;
+  --forest-dark:#0B4800;
+  --forest:#166309;
+
+  --doc-card:rgba(255,255,255,0.6);
+  --doc-line:rgba(43,33,64,0.10);
+  --doc-accent:#FF421E;
+  --doc-accent-2:#166309;
+  --code-bg:#211a33;
+  --mono:'JetBrains Mono','SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+html,body,#root{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
+html,body{height:auto;overflow-y:auto;}
+
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-glow div{position:absolute;border-radius:50%;filter:blur(130px);}
+.glow-ember{width:560px;height:560px;background:var(--ember);top:-200px;left:-160px;opacity:.16;}
+.glow-forest{width:520px;height:520px;background:var(--forest);bottom:-220px;right:-160px;opacity:.14;}
+.glow-lav{width:700px;height:700px;background:var(--lav-1);top:15%;right:5%;opacity:.55;}
+
+/* ======================================================================
+   HERO
+   Layout is now a normal, page-scrolling two-column grid. Nothing here
+   is capped to 100vh with its own internal scrollbar anymore — that was
+   what hid controls: content taller than the viewport just disappeared
+   instead of being reachable. Now the whole page scrolls together, and
+   the avatar canvas stays pinned in view via `position: sticky` while
+   you scroll the control panel next to it.
+   ====================================================================== */
+.layout-wrap{position:relative;z-index:1;height:100vh;overflow:hidden;}
+.layout{
+  position:relative;display:grid;grid-template-columns:56% 44%;
+  height:100%;max-width:1280px;margin:0 auto;padding:24px;align-items:stretch;gap:0;
+}
+@media (max-width:900px){
+  .layout-wrap{height:auto;overflow:visible;}
+  .layout{grid-template-columns:1fr;height:auto;padding:16px;gap:16px;}
+}
+
+.stage{padding:4px 44px 4px;display:flex;align-items:center;justify-content:center;min-height:0;}
+@media (max-width:900px){.stage{min-height:48vh;}}
+
+.canvas-wrap{
+  background:rgba(255,255,255,0.32);
+  backdrop-filter:blur(34px) saturate(140%);
+  -webkit-backdrop-filter:blur(34px) saturate(140%);
+  border:1px solid rgba(255,255,255,0.65);border-radius:24px;
+  width:100%;height:100%;position:relative;z-index:2;
+  overflow:hidden;box-shadow:0 24px 70px rgba(43,33,64,0.14), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.canvas-wrap canvas{width:100%;height:100%;display:block;}
+
+/* Panel is the ONLY scroll container — character stays put. The
+   scrollbar is deliberately visible/styled (not hidden) so it reads as
+   "more controls below", not as content that vanished. */
+.panel{
+  height:100%;min-height:0;overflow-y:scroll;padding:8px 14px 32px 4px;
+  scrollbar-width:thin;scrollbar-color:var(--ember) transparent;
+}
+.panel::-webkit-scrollbar{width:8px;}
+.panel::-webkit-scrollbar-track{background:transparent;}
+.panel::-webkit-scrollbar-thumb{background:rgba(255,66,30,0.45);border-radius:999px;}
+.panel::-webkit-scrollbar-thumb:hover{background:rgba(255,66,30,0.7);}
+@media (max-width:900px){
+  .panel{height:auto;overflow-y:visible;padding:4px 0 24px;}
+}
+
+.top-tag{
+  display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;
+  color:var(--text-dim);letter-spacing:.07em;text-transform:uppercase;margin-bottom:14px;
+}
+.top-tag .pulse{width:6px;height:6px;border-radius:50%;background:var(--ember);box-shadow:0 0 8px var(--ember);}
+
+h1{font-size:27px;font-weight:800;margin:0 0 8px;letter-spacing:-0.02em;
+  background:linear-gradient(120deg,var(--text),var(--ember) 130%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.sub{font-size:13px;color:var(--text-dim);margin:0 0 24px;line-height:1.6;max-width:44ch;}
+
+.group-label{
+  font-size:10.5px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.07em;
+  margin:0 0 9px;display:flex;align-items:center;gap:8px;
+}
+
+.card{
+  background:var(--glass);border:1px solid var(--glass-line);
+  border-radius:16px;overflow:visible;margin-bottom:18px;
+  backdrop-filter:blur(20px);box-shadow:0 8px 26px rgba(43,33,64,0.06);
+}
+.row{padding:12px 15px;border-bottom:1px solid var(--glass-line);}
+.row:last-child{border-bottom:none;}
+.row .label{font-size:11.5px;font-weight:700;color:var(--text);}
+
+/* customization option pills — always wrap, never clipped */
+.opt-row{display:flex;flex-wrap:wrap;gap:6px;}
+.opt-pill{
+  font-size:11px;font-weight:600;padding:7px 12px;border-radius:999px;
+  border:1px solid var(--glass-line);background:rgba(255,255,255,0.6);color:var(--text-dim);
+  cursor:pointer;font-family:inherit;transition:all .15s ease;white-space:nowrap;
+}
+.opt-pill:hover{border-color:var(--ember);}
+.opt-pill.active{background:var(--ember);border-color:var(--ember);color:#fff;}
+
+/* weapons */
+.weapon-row-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+.mini-slider{display:flex;align-items:center;gap:10px;}
+.mini-slider .slider{flex:1;min-width:0;}
+
+.switch{position:relative;width:38px;height:22px;flex:none;}
+.switch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:2;}
+.switch .track{position:absolute;inset:0;background:rgba(43,33,64,0.14);border-radius:999px;transition:background .2s ease;}
+.switch .thumb{
+  position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .2s ease;pointer-events:none;
+}
+.switch input:checked + .track{background:var(--ember);}
+.switch input:checked ~ .thumb{transform:translateX(16px);}
+
+.slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;
+  background:linear-gradient(90deg, var(--forest), var(--ember));outline:none;cursor:pointer;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;
+  background:#fff;border:3px solid var(--ember);box-shadow:0 2px 6px rgba(43,33,64,0.25);cursor:pointer;
+}
+.slider::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--ember);
+  box-shadow:0 2px 6px rgba(43,33,64,0.25);cursor:pointer;
+}
+.value-pill{
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ember);
+  background:rgba(255,66,30,0.12);padding:2px 8px;border-radius:999px;min-width:20px;text-align:center;flex:none;
+}
+
+/* effect chips — always visible, wrap freely, generous tap target */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.chip-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;
+  border:1px solid var(--glass-line);background:rgba(255,255,255,0.6);color:var(--text);font-size:12px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:transform .08s ease, border-color .15s ease;
+}
+.chip-btn:hover{border-color:var(--ember);}
+.chip-btn:active{transform:scale(0.95);}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--ember);flex:none;}
+
+.scroll-cue{
+  margin-top:14px;display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--text-dim);text-decoration:none;width:fit-content;
+}
+.scroll-cue svg{animation:bob 1.6s ease-in-out infinite;}
+.scroll-cue:hover{color:var(--text);}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+
+/* ======================================================================
+   DOCS
+   ====================================================================== */
+.docs{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 24px 100px;}
+@media (max-width:860px){.docs{padding:0 20px 80px;}}
+
+.docs-nav{
+  position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;
+  padding:14px 10px;margin:0 auto 40px;width:fit-content;
+  background:rgba(239,233,250,0.85);backdrop-filter:blur(16px);
+  border:1px solid var(--doc-line);border-radius:999px;box-shadow:0 8px 24px rgba(43,33,64,0.06);
+}
+@media (max-width:860px){.docs-nav{position:relative;top:auto;width:100%;border-radius:18px;}}
+.docs-nav a{
+  color:var(--text-dim);text-decoration:none;font-size:12px;font-weight:600;
+  padding:8px 12px;border-radius:999px;transition:background .15s ease,color .15s ease;white-space:nowrap;
+}
+.docs-nav a:hover{color:var(--text);background:rgba(43,33,64,0.06);}
+
+.doc-section{padding:52px 0;border-bottom:1px solid var(--doc-line);scroll-margin-top:88px;}
+.doc-section:last-of-type{border-bottom:none;}
+.doc-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--doc-accent);margin-bottom:12px;}
+.doc-section h2{font-size:24px;font-weight:800;letter-spacing:-0.01em;margin:0 0 16px;color:var(--text);}
+.doc-section p{font-size:14px;line-height:1.75;color:var(--text-dim);margin:0 0 10px;max-width:64ch;}
+.doc-section code{
+  font-family:var(--mono);font-size:12.5px;background:rgba(255,66,30,0.1);
+  color:var(--doc-accent);padding:2px 7px;border-radius:5px;
+}
+
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.badge{
+  font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;
+  background:var(--doc-card);border:1px solid var(--doc-line);color:var(--text);backdrop-filter:blur(12px);
+}
+
+.fix-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px;}
+@media (max-width:700px){.fix-grid{grid-template-columns:1fr;}}
+.fix-card{
+  border-radius:16px;padding:18px;border:1px solid rgba(22,99,9,0.28);
+  background:rgba(22,99,9,0.06);backdrop-filter:blur(12px);
+}
+.fix-card-title{font-size:12px;font-weight:700;color:var(--doc-accent-2);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.fix-card-title::before{content:'✓';font-size:11px;}
+.fix-card p{font-size:12.5px;margin:0;max-width:none;}
+
+.inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
+@media (max-width:560px){.inputs-grid{grid-template-columns:1fr;}}
+.input-card{
+  background:var(--doc-card);border:1px solid var(--doc-line);border-radius:14px;
+  padding:18px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(12px);
+}
+.input-kind{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--doc-accent-2);}
+.input-card code{width:fit-content;}
+.input-card p{font-size:12.5px;color:var(--text-dim);line-height:1.55;margin:0;}
+
+.live-feed-stack{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
+.live-feed{
+  display:flex;align-items:center;gap:9px;
+  background:rgba(22,99,9,0.08);border:1px solid rgba(22,99,9,0.22);
+  border-radius:999px;padding:9px 16px;width:fit-content;flex-wrap:wrap;
+}
+.live-feed-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--doc-accent-2);flex:none;
+  box-shadow:0 0 0 3px rgba(22,99,9,.15);animation:live-pulse 1.6s ease-in-out infinite;
+}
+@keyframes live-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.live-feed-label{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--doc-accent-2);}
+.live-feed-value{font-size:12px;color:var(--text);font-family:var(--mono);}
+
+.code-block{
+  background:var(--code-bg);border:1px solid rgba(0,0,0,0.25);border-radius:14px;
+  padding:22px 24px;overflow-x:auto;margin-top:16px;
+}
+.code-block code{
+  background:none;padding:0;color:#ece6fa;font-family:var(--mono);
+  font-size:12.5px;line-height:1.7;white-space:pre;
+}
+
+.check-list{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.check-list li{font-size:14px;color:var(--text);padding-left:26px;position:relative;line-height:1.55;}
+.check-list li::before{
+  content:'';position:absolute;left:0;top:6px;width:12px;height:12px;border-radius:4px;
+  border:1.5px solid var(--doc-accent);
+}
+.check-list code{font-size:12px;}
+
+.docs-footer{margin-top:34px;padding-top:26px;border-top:1px solid var(--doc-line);font-size:12px;color:var(--text-dim);text-align:center;}
