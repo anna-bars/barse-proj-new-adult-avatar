@@ -6,7 +6,7 @@ const STATE_MACHINE = 'Adult Avatar Controller'
 
 const HAIR_VARIANTS = ['Short/Spiky', 'Side Hair', 'Braids']
 const HAIR_COLORS = ['Dark Brown', 'Chestnut', 'Auburn', 'Orange/Red', 'Blonde']
-const SKIN_VARIANTS = ['Palest', 'Light', 'Medium', 'Tan', 'Deep']
+const SKIN_VARIANTS = ['Light', 'Palest', 'Medium', 'Tan', 'Deep']
 const EYE_COLORS = [ 'Dark Brown','Dark Green', 'Hazel', 'Blue-Gray', 'Amber/Gold']
 const OUTFIT_COLORS = ['Purple (base)', 'Blue', 'Green', 'Red', 'Gold']
 
